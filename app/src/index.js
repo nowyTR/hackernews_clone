@@ -2,14 +2,24 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { ThemeProvider } from 'emotion-theming'
 import theme from '@rebass/preset'
-import './index.css'
-import App from './components/App'
+import { ApolloProvider } from '@apollo/react-hooks'
+import ApolloClient from 'apollo-boost'
+
 import * as serviceWorker from './serviceWorker'
+import App from './components/App'
+import { API_URL } from './config'
+import './index.css'
+
+const client = new ApolloClient({
+  uri: API_URL
+})
 
 ReactDOM.render(
-  <ThemeProvider theme={theme}>
-    <App />
-  </ThemeProvider>,
+  <ApolloProvider client={client}>
+    <ThemeProvider theme={theme}>
+      <App />
+    </ThemeProvider>
+  </ApolloProvider>,
   document.getElementById('root')
 )
 
