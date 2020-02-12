@@ -38,7 +38,7 @@ function LinkList() {
   return (
     <Flex flexWrap="wrap" mx={-2}>
       {data.feed.links.map(link => (
-        <Box key={link.id} p={5} width={1 / 2}>
+        <Box key={link.id} p={3} width={1 / 2}>
           <Link link={link} />
         </Box>
       ))}

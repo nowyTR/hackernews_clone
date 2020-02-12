@@ -10,7 +10,7 @@ Link.propTypes = {
   link: PropTypes.shape({
     description: PropTypes.string,
     url: PropTypes.string
-  }).isRequired
+  })
 }
 
 export default LinkItem
