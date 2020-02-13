@@ -30,7 +30,7 @@ function CreateLinkForm({ history }) {
   }
 
   return (
-    <Box as="form" onSubmit={handleSubmit} py={3}>
+    <Box as="form" onSubmit={handleSubmit} py={3} width={600}>
       <Flex mx={-2} mb={3}>
         <Box width={1 / 2} px={2}>
           <Label htmlFor="url">URL</Label>
