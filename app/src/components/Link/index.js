@@ -25,13 +25,10 @@ const VOTE_MUTATION = gql`
   }
 `
 
-function LinkItem({ link, onVote }) {
+function LinkItem({ link, onVote = () => undefined }) {
   const [vote] = useMutation(VOTE_MUTATION, {
-    onCompleted: () => {
-      console.log('success')
-    },
     update: (store, { data: { vote } }) => {
-      onVote(store, vote, this.props.link.id)
+      onVote(store, vote, link.id)
     }
   })
 
