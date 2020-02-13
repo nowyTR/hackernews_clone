@@ -15,17 +15,18 @@ const ADD_LINK = gql`
 `
 
 function CreateLinkForm({ history }) {
-  const [addLink, { data }] = useMutation(ADD_LINK)
+  const [addLink] = useMutation(ADD_LINK, {
+    onCompleted: () => {
+      history.push('/')
+    }
+  })
   const [url, setUrl] = React.useState('')
   const [description, setDescription] = React.useState('')
 
   const handleSubmit = e => {
     e.preventDefault()
     addLink({
-      variables: { description, url },
-      onCompleted: () => {
-        history.push('/')
-      }
+      variables: { description, url }
     })
   }
 

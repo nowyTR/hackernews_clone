@@ -1,14 +1,38 @@
 import React from 'react'
 import { Label, Input } from '@rebass/forms'
 import { Box, Flex, Button } from 'rebass'
+import { gql } from 'apollo-boost'
+import { useMutation } from '@apollo/react-hooks'
 import { AUTH_TOKEN } from '../../constants'
 
-function Login() {
+const SIGNUP_MUTATION = gql`
+  mutation SignupMutation($email: String!, $password: String!, $name: String!) {
+    signup(email: $email, password: $password, name: $name) {
+      token
+    }
+  }
+`
+
+const LOGIN_MUTATION = gql`
+  mutation LoginMutation($email: String!, $password: String!) {
+    login(email: $email, password: $password) {
+      token
+    }
+  }
+`
+
+function Login({ history }) {
   const [formState, setFormState] = React.useState({
     login: true, // switch between Login and SignUp
     name: '',
     email: '',
     password: ''
+  })
+
+  const [authenticate] = useMutation(formState.login ? LOGIN_MUTATION : SIGNUP_MUTATION, {
+    onCompleted: data => {
+      confirm(data)
+    }
   })
 
   const handleChange = (key, value) => {
@@ -18,12 +42,22 @@ function Login() {
     })
   }
 
-  const handleSubmit = e => {
-    e.preventDefault()
+  const saveUserData = token => {
+    window.localStorage.setItem(AUTH_TOKEN, token)
   }
 
-  const saveUserData = token => {
-    localStorage.setItem(AUTH_TOKEN, token)
+  const confirm = data => {
+    const { token } = formState.login ? data.login : data.signup
+    saveUserData(token)
+    history.push(`/`)
+  }
+
+  const handleSubmit = async e => {
+    e.preventDefault()
+    const { name, email, password } = formState
+    authenticate({
+      variables: { name, email, password }
+    })
   }
 
   const isSignup = !formState.login

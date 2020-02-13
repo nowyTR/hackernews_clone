@@ -8,10 +8,22 @@ import ApolloClient from 'apollo-boost'
 import * as serviceWorker from './serviceWorker'
 import App from './components/App'
 import { API_URL } from './config'
+import { AUTH_TOKEN } from './constants'
 import './index.css'
 
 const client = new ApolloClient({
-  uri: API_URL
+  uri: API_URL,
+  fetchOptions: {
+    credentials: 'include'
+  },
+  request: async operation => {
+    const token = window.localStorage.getItem(AUTH_TOKEN)
+    operation.setContext({
+      headers: {
+        authorization: `Bearer ${token}`
+      }
+    })
+  }
 })
 
 ReactDOM.render(
