@@ -4,6 +4,7 @@ import { Box, Flex, Button } from 'rebass'
 import { gql } from 'apollo-boost'
 import { useMutation } from '@apollo/react-hooks'
 import { FEED_QUERY } from '../LinkList'
+import { LINKS_PER_PAGE } from '../../constants'
 
 const ADD_LINK = gql`
   mutation AddLink($description: String!, $url: String!) {
@@ -18,14 +19,21 @@ const ADD_LINK = gql`
 function CreateLinkForm({ history }) {
   const [addLink] = useMutation(ADD_LINK, {
     onCompleted: () => {
-      history.push('/')
+      history.push('/new/1')
     },
     update: (store, { data: { post } }) => {
-      const data = store.readQuery({ query: FEED_QUERY })
+      const first = LINKS_PER_PAGE
+      const skip = 0
+      const orderBy = 'createdAt_DESC'
+      const data = store.readQuery({
+        query: FEED_QUERY,
+        variables: { first, skip, orderBy }
+      })
       data.feed.links.unshift(post)
       store.writeQuery({
         query: FEED_QUERY,
-        data
+        data,
+        variables: { first, skip, orderBy }
       })
     }
   })

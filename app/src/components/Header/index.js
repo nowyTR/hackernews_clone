@@ -36,6 +36,9 @@ function Header({ history }) {
       <CustomNavLink color="primary" exact to="/" activeStyle={activeStyle}>
         Feed
       </CustomNavLink>
+      <CustomNavLink color="primary" exact to="/top" activeStyle={activeStyle}>
+        Top
+      </CustomNavLink>
       <CustomNavLink color="primary" exact to="/search" activeStyle={activeStyle}>
         Search
       </CustomNavLink>
