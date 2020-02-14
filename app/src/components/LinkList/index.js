@@ -46,6 +46,32 @@ const NEW_LINKS_SUBSCRIPTION = gql`
   }
 `
 
+const NEW_VOTES_SUBSCRIPTION = gql`
+  subscription {
+    newVote {
+      id
+      link {
+        id
+        url
+        description
+        postedBy {
+          id
+          name
+        }
+        votes {
+          id
+          user {
+            id
+          }
+        }
+      }
+      user {
+        id
+      }
+    }
+  }
+`
+
 function LinkListWithData() {
   const { subscribeToMore, loading, error, data } = useQuery(FEED_QUERY)
 
@@ -80,20 +106,31 @@ function LinkListWithData() {
     })
   }
 
+  const subscribeToNewVotes = () => {
+    subscribeToMore({
+      document: NEW_VOTES_SUBSCRIPTION
+    })
+  }
+
+  const initSubscriptions = () => {
+    subscribeToNewLinks()
+    subscribeToNewVotes()
+  }
+
   return (
     <LinkList
       isLoading={loading}
       isError={error}
       links={data?.feed.links}
       onVote={updateCacheAfterVote}
-      subscribeToNewLinks={subscribeToNewLinks}
+      initSubscriptions={initSubscriptions}
     />
   )
 }
 
-function LinkList({ isLoading, isError, links, subscribeToNewLinks, onVote }) {
+function LinkList({ isLoading, isError, links, initSubscriptions, onVote }) {
   React.useEffect(() => {
-    subscribeToNewLinks()
+    initSubscriptions()
   }, [])
 
   if (isLoading) {
